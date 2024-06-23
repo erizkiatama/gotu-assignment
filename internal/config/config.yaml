@@ -1,0 +1,21 @@
+server:
+  port: 8080
+  shutdownTimeMillis: 10
+  secretKey: secret
+  env: local
+
+database:
+  postgres:
+    host: localhost
+    port: 5432
+    username: postgres
+    password: postgres
+    database: gotu
+    ssl: disable
+
+featureFlag:
+  enableMigrations: true
+
+jwt:
+  accessTokenExpiryHour: 1
+  refreshTokenExpiryHour: 24
