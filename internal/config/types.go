@@ -2,10 +2,10 @@ package config
 
 type (
 	Config struct {
-		Server            ServerConfig      `yaml:"server"`
-		Database          DatabaseConfig    `yaml:"database"`
-		FeatureFlagConfig FeatureFlagConfig `yaml:"featureFlag"`
-		JwtConfig         JwtConfig         `yaml:"jwt"`
+		Server      ServerConfig      `yaml:"server"`
+		Database    DatabaseConfig    `yaml:"database"`
+		FeatureFlag FeatureFlagConfig `yaml:"featureFlag"`
+		JwtConfig   JwtConfig         `yaml:"jwt"`
 	}
 
 	ServerConfig struct {
