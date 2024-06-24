@@ -1,6 +1,6 @@
 module github.com/erizkiatama/gotu-assignment
 
-go 1.20.0
+go 1.20
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2

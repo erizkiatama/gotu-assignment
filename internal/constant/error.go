@@ -16,3 +16,11 @@ var (
 var (
 	ErrorListBooksFailed = "failed to list all books"
 )
+
+// Order module error messages
+var (
+	ErrorCreateOrderFailed       = "failed to create order"
+	ErrorCreateOrderDetailFailed = "failed to create order detail"
+	ErrorGetAllOrderFailed       = "failed to get order list"
+	ErrorGetOrderDetailFailed    = "failed to get order detail"
+)

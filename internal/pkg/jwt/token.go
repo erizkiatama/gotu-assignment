@@ -17,8 +17,8 @@ type TokenClaim struct {
 func GenerateTokenPair(req TokenClaim) (*user.TokenPairResponse, error) {
 	access := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"access":  true,
-		"id":      req.Id,
-		"expires": time.Now().Add(time.Duration(config.Get().Jwt.AccessTokenExpiryHours) * time.Hour).Unix(),
+		"user_id": req.Id,
+		"expires": time.Now().Add(time.Duration(config.Get().Jwt.AccessTokenExpiryHours) * time.Hour).UTC().Unix(),
 	})
 
 	at, err := access.SignedString([]byte(config.Get().Server.SecretKey))
@@ -28,8 +28,8 @@ func GenerateTokenPair(req TokenClaim) (*user.TokenPairResponse, error) {
 
 	refresh := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"refresh": true,
-		"id":      req.Id,
-		"expires": time.Now().Add(time.Duration(config.Get().Jwt.RefreshTokenExpiryHours) * time.Hour).Unix(),
+		"user_id": req.Id,
+		"expires": time.Now().Add(time.Duration(config.Get().Jwt.RefreshTokenExpiryHours) * time.Hour).UTC().Unix(),
 	})
 
 	rt, err := refresh.SignedString([]byte(config.Get().Server.SecretKey))
@@ -64,12 +64,12 @@ func AuthorizeToken(tokenString, secretKey string, isRefresh bool) (*TokenClaim,
 			return nil, errors.New("token was not a refresh token")
 		}
 
-		if int64(claims["expires"].(float64)) < time.Now().Unix() {
+		if int64(claims["expires"].(float64)) < time.Now().UTC().Unix() {
 			return nil, errors.New("token has expired")
 		}
 
 		return &TokenClaim{
-			Id: claims["id"].(int64),
+			Id: int64(claims["user_id"].(float64)),
 		}, nil
 	} else {
 		return nil, errors.New("invalid token")

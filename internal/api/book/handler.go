@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/erizkiatama/gotu-assignment/internal/model/book"
+	"github.com/erizkiatama/gotu-assignment/internal/model/response"
 	"github.com/erizkiatama/gotu-assignment/internal/pkg/helpers"
 	"github.com/gin-gonic/gin"
 )
@@ -33,5 +34,5 @@ func (h *Handler) List(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"result": res})
+	c.JSON(http.StatusOK, response.Response{Result: res})
 }

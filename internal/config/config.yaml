@@ -17,5 +17,5 @@ featureFlag:
   enableMigrations: true
 
 jwt:
-  accessTokenExpiryHour: 1
-  refreshTokenExpiryHour: 24
+  accessTokenExpiryHours: 1
+  refreshTokenExpiryHours: 24

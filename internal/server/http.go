@@ -10,14 +10,17 @@ import (
 	"time"
 
 	"github.com/erizkiatama/gotu-assignment/internal/api/book"
+	"github.com/erizkiatama/gotu-assignment/internal/api/order"
 	"github.com/erizkiatama/gotu-assignment/internal/api/user"
+	"github.com/erizkiatama/gotu-assignment/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	router      *gin.Engine
-	UserHandler *user.Handler
-	BookHandler *book.Handler
+	router       *gin.Engine
+	UserHandler  *user.Handler
+	BookHandler  *book.Handler
+	OrderHandler *order.Handler
 }
 
 func (s *Server) registerRoutes() {
@@ -40,6 +43,12 @@ func (s *Server) registerRoutes() {
 	// Register book handler
 	bookGroup := v1.Group("/book")
 	bookGroup.GET("/", s.BookHandler.List)
+
+	// Register order handler
+	orderGroup := v1.Group("/order")
+	orderGroup.POST("/", middleware.AuthorizeToken(), s.OrderHandler.CreateOrder)
+	orderGroup.GET("/", middleware.AuthorizeToken(), s.OrderHandler.ListOrder)
+	orderGroup.GET("/:order_id", middleware.AuthorizeToken(), s.OrderHandler.DetailOrder)
 }
 
 func (s *Server) Run(port string, timeout int64) error {
