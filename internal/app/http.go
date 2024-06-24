@@ -6,6 +6,10 @@ import (
 	"github.com/erizkiatama/gotu-assignment/internal/config"
 	"github.com/erizkiatama/gotu-assignment/internal/pkg/db"
 	"github.com/erizkiatama/gotu-assignment/internal/server"
+
+	userApi "github.com/erizkiatama/gotu-assignment/internal/api/user"
+	userRepository "github.com/erizkiatama/gotu-assignment/internal/repository/user"
+	userService "github.com/erizkiatama/gotu-assignment/internal/service/user"
 )
 
 func Initialize(cfg *config.Config) error {
@@ -22,7 +26,18 @@ func Initialize(cfg *config.Config) error {
 		}
 	}
 
-	srv := server.Server{}
+	// Initialize repository
+	userRepo := userRepository.New(database)
+
+	// Initialize service
+	userSvc := userService.New(userRepo)
+
+	// Initialize handler
+	userHandler := userApi.New(userSvc)
+
+	srv := server.Server{
+		UserHandler: userHandler,
+	}
 
 	return srv.Run(cfg.Server.Port, cfg.Server.ShutdownTimeMillis)
 }

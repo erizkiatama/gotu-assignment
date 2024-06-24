@@ -1,7 +1,7 @@
 server:
   port: 8080
   shutdownTimeMillis: 10
-  secretKey: secret
+  secretKey: CjKDMhscFvjxdCchVNanWqaqjQnmXAgc
   env: local
 
 database:

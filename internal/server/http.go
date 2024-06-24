@@ -9,15 +9,19 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/erizkiatama/gotu-assignment/internal/api/user"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	router *gin.Engine
+	router      *gin.Engine
+	UserHandler *user.Handler
 }
 
 func (s *Server) registerRoutes() {
 	s.router = gin.Default()
+
+	v1 := s.router.Group("/api/v1")
 
 	// Register health handler
 	s.router.GET("/health", func(c *gin.Context) {
@@ -25,6 +29,11 @@ func (s *Server) registerRoutes() {
 			"status": "ok",
 		})
 	})
+
+	// Register user handler
+	userGroup := v1.Group("/user")
+	userGroup.POST("/register", s.UserHandler.Register)
+	userGroup.POST("/login", s.UserHandler.Login)
 }
 
 func (s *Server) Run(port string, timeout int64) error {

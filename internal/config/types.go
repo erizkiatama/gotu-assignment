@@ -5,7 +5,7 @@ type (
 		Server      ServerConfig      `yaml:"server"`
 		Database    DatabaseConfig    `yaml:"database"`
 		FeatureFlag FeatureFlagConfig `yaml:"featureFlag"`
-		JwtConfig   JwtConfig         `yaml:"jwt"`
+		Jwt         JwtConfig         `yaml:"jwt"`
 	}
 
 	ServerConfig struct {

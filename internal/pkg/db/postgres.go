@@ -3,8 +3,6 @@ package db
 import (
 	"fmt"
 	"log"
-	"os"
-	"strings"
 
 	"github.com/erizkiatama/gotu-assignment/internal/config"
 	"github.com/golang-migrate/migrate/v4"
@@ -36,25 +34,7 @@ func RunDBMigrations(config config.PostgresConfig, url string) error {
 		config.Database,
 	)
 
-	log.Println("Migrating base schema")
-	migrateUp(dsn, url)
-
-	files, err := os.ReadDir(strings.Replace(url, "file://", "./", 1))
-	if err != nil {
-		return err
-	}
-
-	for _, f := range files {
-		if f.IsDir() {
-			log.Println("Migrating: " + f.Name())
-			migrateUp(dsn+"&search_path="+f.Name(), url+f.Name())
-		}
-	}
-
-	return nil
-}
-
-func migrateUp(dsn, url string) {
+	log.Println("start migrating schema...")
 	migration, err := migrate.New(url, dsn)
 	if err != nil {
 		panic(err)
@@ -63,4 +43,7 @@ func migrateUp(dsn, url string) {
 	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
 		panic(err)
 	}
+
+	log.Println("migration success")
+	return nil
 }
