@@ -10,6 +10,10 @@ import (
 	userApi "github.com/erizkiatama/gotu-assignment/internal/api/user"
 	userRepository "github.com/erizkiatama/gotu-assignment/internal/repository/user"
 	userService "github.com/erizkiatama/gotu-assignment/internal/service/user"
+
+	bookApi "github.com/erizkiatama/gotu-assignment/internal/api/book"
+	bookRepository "github.com/erizkiatama/gotu-assignment/internal/repository/book"
+	bookService "github.com/erizkiatama/gotu-assignment/internal/service/book"
 )
 
 func Initialize(cfg *config.Config) error {
@@ -28,15 +32,19 @@ func Initialize(cfg *config.Config) error {
 
 	// Initialize repository
 	userRepo := userRepository.New(database)
+	bookRepo := bookRepository.New(database)
 
 	// Initialize service
 	userSvc := userService.New(userRepo)
+	bookSvc := bookService.New(bookRepo)
 
 	// Initialize handler
 	userHandler := userApi.New(userSvc)
+	bookHandler := bookApi.New(bookSvc)
 
 	srv := server.Server{
 		UserHandler: userHandler,
+		BookHandler: bookHandler,
 	}
 
 	return srv.Run(cfg.Server.Port, cfg.Server.ShutdownTimeMillis)

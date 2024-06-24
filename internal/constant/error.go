@@ -11,3 +11,8 @@ var (
 	ErrorGetUserFailed     = "failed to get user details"
 	ErrorPasswordNotMatch  = "password does not match"
 )
+
+// Book module error messages
+var (
+	ErrorListBooksFailed = "failed to list all books"
+)

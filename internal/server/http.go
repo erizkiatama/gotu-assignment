@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/erizkiatama/gotu-assignment/internal/api/book"
 	"github.com/erizkiatama/gotu-assignment/internal/api/user"
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,7 @@ import (
 type Server struct {
 	router      *gin.Engine
 	UserHandler *user.Handler
+	BookHandler *book.Handler
 }
 
 func (s *Server) registerRoutes() {
@@ -34,6 +36,10 @@ func (s *Server) registerRoutes() {
 	userGroup := v1.Group("/user")
 	userGroup.POST("/register", s.UserHandler.Register)
 	userGroup.POST("/login", s.UserHandler.Login)
+
+	// Register book handler
+	bookGroup := v1.Group("/book")
+	bookGroup.GET("/", s.BookHandler.List)
 }
 
 func (s *Server) Run(port string, timeout int64) error {

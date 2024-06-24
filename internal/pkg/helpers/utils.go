@@ -24,13 +24,13 @@ func GenerateErrorResponse(c *gin.Context, err error) {
 	var svcErr *response.ServiceError
 
 	if errors.As(err, &svcErr) {
-		c.JSON(svcErr.Code, response.Response{
-			Error: svcErr.Msg,
+		c.JSON(svcErr.Code, gin.H{
+			"error": svcErr.Msg,
 		})
 		return
 	}
 
-	c.JSON(http.StatusInternalServerError, response.Response{
-		Error: constant.ErrorInternalServer,
+	c.JSON(http.StatusInternalServerError, gin.H{
+		"error": constant.ErrorInternalServer,
 	})
 }

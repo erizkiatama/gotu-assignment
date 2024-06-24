@@ -50,8 +50,9 @@ func Test_handler_Register(t *testing.T) {
 		name    string
 		args    args
 		mock    func(arg args, c *gin.Context)
-		want    response.Response
+		want    user.TokenPairResponse
 		wantErr bool
+		err     string
 	}{
 		{
 			name: "invalid parameters",
@@ -65,9 +66,8 @@ func Test_handler_Register(t *testing.T) {
 			mock: func(arg args, c *gin.Context) {
 				mockJsonBinding(c, map[string]interface{}{"email": 123}, "POST")
 			},
-			want: response.Response{
-				Error: "invalid parameters: json: cannot unmarshal number into Go struct field RegisterRequest.email of type string",
-			},
+			wantErr: true,
+			err:     "invalid parameters: json: cannot unmarshal number into Go struct field RegisterRequest.email of type string",
 		},
 		{
 			name: "error from service",
@@ -86,9 +86,8 @@ func Test_handler_Register(t *testing.T) {
 					Err:  errors.New("error user already exists"),
 				})
 			},
-			want: response.Response{
-				Error: constant.ErrorUserAlreadyExists,
-			},
+			wantErr: true,
+			err:     constant.ErrorUserAlreadyExists,
 		},
 		{
 			name: "success",
@@ -106,11 +105,9 @@ func Test_handler_Register(t *testing.T) {
 					Refresh: "refresh_token",
 				}, nil)
 			},
-			want: response.Response{
-				Result: map[string]interface{}{
-					"access":  "access_token",
-					"refresh": "refresh_token",
-				},
+			want: user.TokenPairResponse{
+				Access:  "access_token",
+				Refresh: "refresh_token",
 			},
 		},
 	}
@@ -128,9 +125,15 @@ func Test_handler_Register(t *testing.T) {
 				h.Register(c)
 				So(w.Code, ShouldEqual, tt.args.statusCode)
 
-				var got response.Response
-				_ = json.Unmarshal(w.Body.Bytes(), &got)
-				So(got, ShouldEqual, tt.want)
+				if tt.wantErr {
+					var got map[string]string
+					_ = json.Unmarshal(w.Body.Bytes(), &got)
+					So(got["error"], ShouldEqual, tt.err)
+				} else {
+					var got map[string]user.TokenPairResponse
+					_ = json.Unmarshal(w.Body.Bytes(), &got)
+					So(got["result"], ShouldResemble, tt.want)
+				}
 			})
 		}
 	})
@@ -151,8 +154,9 @@ func Test_handler_Login(t *testing.T) {
 		name    string
 		args    args
 		mock    func(arg args, c *gin.Context)
-		want    response.Response
+		want    user.TokenPairResponse
 		wantErr bool
+		err     string
 	}{
 		{
 			name: "invalid parameters",
@@ -166,9 +170,8 @@ func Test_handler_Login(t *testing.T) {
 			mock: func(arg args, c *gin.Context) {
 				mockJsonBinding(c, map[string]interface{}{"email": 123}, "POST")
 			},
-			want: response.Response{
-				Error: "invalid parameters: json: cannot unmarshal number into Go struct field LoginRequest.email of type string",
-			},
+			wantErr: true,
+			err:     "invalid parameters: json: cannot unmarshal number into Go struct field LoginRequest.email of type string",
 		},
 		{
 			name: "error from service",
@@ -183,9 +186,8 @@ func Test_handler_Login(t *testing.T) {
 				mockJsonBinding(c, arg.req, "POST")
 				userSvc.EXPECT().Login(gomock.Any(), arg.req).Return(nil, errors.New("error from service"))
 			},
-			want: response.Response{
-				Error: constant.ErrorInternalServer,
-			},
+			wantErr: true,
+			err:     constant.ErrorInternalServer,
 		},
 		{
 			name: "success",
@@ -203,11 +205,9 @@ func Test_handler_Login(t *testing.T) {
 					Refresh: "refresh_token",
 				}, nil)
 			},
-			want: response.Response{
-				Result: map[string]interface{}{
-					"access":  "access_token",
-					"refresh": "refresh_token",
-				},
+			want: user.TokenPairResponse{
+				Access:  "access_token",
+				Refresh: "refresh_token",
 			},
 		},
 	}
@@ -226,9 +226,15 @@ func Test_handler_Login(t *testing.T) {
 				h.Login(c)
 				So(w.Code, ShouldEqual, tt.args.statusCode)
 
-				var got response.Response
-				_ = json.Unmarshal(w.Body.Bytes(), &got)
-				So(got, ShouldEqual, tt.want)
+				if tt.wantErr {
+					var got map[string]string
+					_ = json.Unmarshal(w.Body.Bytes(), &got)
+					So(got["error"], ShouldEqual, tt.err)
+				} else {
+					var got map[string]user.TokenPairResponse
+					_ = json.Unmarshal(w.Body.Bytes(), &got)
+					So(got["result"], ShouldResemble, tt.want)
+				}
 			})
 		}
 	})
