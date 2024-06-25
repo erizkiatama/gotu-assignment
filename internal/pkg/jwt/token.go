@@ -60,7 +60,7 @@ func AuthorizeToken(tokenString, secretKey string, isRefresh bool) (*TokenClaim,
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if isRefresh && !claims["refresh"].(bool) {
+		if isRefresh && claims["refresh"] == nil {
 			return nil, errors.New("token was not a refresh token")
 		}
 
