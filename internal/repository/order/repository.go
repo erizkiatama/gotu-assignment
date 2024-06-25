@@ -64,6 +64,7 @@ func (r *repository) BulkCreateOrderDetail(ctx context.Context, reqs []order.Ord
 		if err := rows.Scan(&reqs[i].ID); err != nil {
 			return nil, fmt.Errorf("[OrderRepo.BulkCreateOrderDetail] failed to scan row: %v", err)
 		}
+		i++
 	}
 
 	return reqs, nil
@@ -92,7 +93,7 @@ func (r *repository) GetOrderDetail(ctx context.Context, userID, orderID int64) 
 		return nil, fmt.Errorf("[OrderRepo.GetOrderDetail] failed to prepare statement: %v", err)
 	}
 
-	if err := stmt.SelectContext(ctx, &res, userID, orderID); err != nil {
+	if err := stmt.SelectContext(ctx, &res, orderID, userID); err != nil {
 		return nil, fmt.Errorf("[OrderRepo.GetOrderDetail] failed to execute query: %v", err)
 	}
 
