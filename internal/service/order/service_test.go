@@ -272,6 +272,18 @@ func Test_service_DetailOrder(t *testing.T) {
 			want:    nil,
 			wantErr: true,
 		},
+		{
+			name: "no order found",
+			args: args{
+				userID:  1,
+				orderID: 1,
+			},
+			mock: func(arg args) {
+				orderRepo.EXPECT().GetOrderDetail(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, nil)
+			},
+			want:    nil,
+			wantErr: true,
+		},
 	}
 
 	Convey("Test Order Service - DetailOrder", t, func() {

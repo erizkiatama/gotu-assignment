@@ -2,6 +2,7 @@ package order
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/erizkiatama/gotu-assignment/internal/constant"
@@ -119,6 +120,14 @@ func (s *service) DetailOrder(ctx context.Context, userID, orderID int64) (*orde
 			Code: http.StatusInternalServerError,
 			Msg:  constant.ErrorGetOrderDetailFailed,
 			Err:  err,
+		}
+	}
+
+	if len(details) == 0 {
+		return nil, &response.ServiceError{
+			Code: http.StatusNotFound,
+			Msg:  constant.ErrorOrderNotFound,
+			Err:  fmt.Errorf("[OrderSvc.DetailOrder] order with id %d not found", orderID),
 		}
 	}
 

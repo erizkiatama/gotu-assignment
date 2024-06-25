@@ -23,4 +23,5 @@ var (
 	ErrorCreateOrderDetailFailed = "failed to create order detail"
 	ErrorGetAllOrderFailed       = "failed to get order list"
 	ErrorGetOrderDetailFailed    = "failed to get order detail"
+	ErrorOrderNotFound           = "order not found"
 )
