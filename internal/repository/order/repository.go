@@ -84,7 +84,7 @@ func (r *repository) GetAllOrder(ctx context.Context, userID int64) ([]order.Ord
 	return res, nil
 }
 
-func (r *repository) GetOrderDetail(ctx context.Context, orderID int64) ([]order.OrderDetailModel, error) {
+func (r *repository) GetOrderDetail(ctx context.Context, userID, orderID int64) ([]order.OrderDetailModel, error) {
 	var res []order.OrderDetailModel
 
 	stmt, err := r.db.PreparexContext(ctx, r.db.Rebind(queryGetOrderDetail))
@@ -92,7 +92,7 @@ func (r *repository) GetOrderDetail(ctx context.Context, orderID int64) ([]order
 		return nil, fmt.Errorf("[OrderRepo.GetOrderDetail] failed to prepare statement: %v", err)
 	}
 
-	if err := stmt.SelectContext(ctx, &res, orderID); err != nil {
+	if err := stmt.SelectContext(ctx, &res, userID, orderID); err != nil {
 		return nil, fmt.Errorf("[OrderRepo.GetOrderDetail] failed to execute query: %v", err)
 	}
 

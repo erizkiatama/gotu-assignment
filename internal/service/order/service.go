@@ -14,7 +14,7 @@ type orderReposistory interface {
 	CreateOrder(ctx context.Context, req order.OrderModel) (int64, error)
 	BulkCreateOrderDetail(ctx context.Context, req []order.OrderDetailModel) ([]order.OrderDetailModel, error)
 	GetAllOrder(ctx context.Context, userID int64) ([]order.OrderModel, error)
-	GetOrderDetail(ctx context.Context, orderID int64) ([]order.OrderDetailModel, error)
+	GetOrderDetail(ctx context.Context, userID, orderID int64) ([]order.OrderDetailModel, error)
 }
 
 type service struct {
@@ -113,7 +113,7 @@ func (s *service) ListOrder(ctx context.Context, userID int64) ([]order.OrderRes
 }
 
 func (s *service) DetailOrder(ctx context.Context, userID, orderID int64) (*order.OrderResponse, error) {
-	details, err := s.orderRepo.GetOrderDetail(ctx, orderID)
+	details, err := s.orderRepo.GetOrderDetail(ctx, userID, orderID)
 	if err != nil {
 		return nil, &response.ServiceError{
 			Code: http.StatusInternalServerError,

@@ -30,10 +30,16 @@ var (
 
 	queryGetOrderDetail = `
 		SELECT
-			id, order_id, book_id, quantity, price
+			od.id, od.order_id, od.book_id, od.quantity, od.price
 		FROM
-			order_details
+			order_details od
+		JOIN
+			orders o
+		ON
+			od.order_id = o.id
 		WHERE
-			order_id = ?
+			od.order_id = ?
+		AND
+			o.user_id = ?
 	`
 )

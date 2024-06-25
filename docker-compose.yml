@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: gotu_database
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - gotu_data:/var/lib/postgresql/data
+    networks:
+      - fullstack
+  api:
+    container_name: gotu_api
+    build: .
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - api_volume:/usr/src/app/
+    depends_on:
+      - postgres
+    networks:
+      - fullstack
+
+volumes:
+  gotu_data:
+  api_volume:
+
+networks:
+  fullstack:
+    driver: bridge

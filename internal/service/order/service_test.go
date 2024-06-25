@@ -234,7 +234,7 @@ func Test_service_DetailOrder(t *testing.T) {
 				orderID: 1,
 			},
 			mock: func(arg args) {
-				orderRepo.EXPECT().GetOrderDetail(gomock.Any(), gomock.Any()).Return([]order.OrderDetailModel{
+				orderRepo.EXPECT().GetOrderDetail(gomock.Any(), gomock.Any(), gomock.Any()).Return([]order.OrderDetailModel{
 					{
 						ID:      1,
 						OrderID: 1,
@@ -267,7 +267,7 @@ func Test_service_DetailOrder(t *testing.T) {
 				orderID: 1,
 			},
 			mock: func(arg args) {
-				orderRepo.EXPECT().GetOrderDetail(gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
+				orderRepo.EXPECT().GetOrderDetail(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 			},
 			want:    nil,
 			wantErr: true,

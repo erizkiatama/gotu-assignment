@@ -282,6 +282,7 @@ func Test_repository_GetOrderDetail(t *testing.T) {
 
 	type args struct {
 		orderID int64
+		userID  int64
 	}
 	tests := []struct {
 		name    string
@@ -303,7 +304,7 @@ func Test_repository_GetOrderDetail(t *testing.T) {
 			name: "error when executing query",
 			args: args{orderID: 1},
 			mock: func(args args) {
-				mock.ExpectPrepare(queryGetOrderDetail).ExpectQuery().WithArgs(args.orderID).WillReturnError(errors.New("error"))
+				mock.ExpectPrepare(queryGetOrderDetail).ExpectQuery().WithArgs(args.userID, args.orderID).WillReturnError(errors.New("error"))
 			},
 			want:    nil,
 			wantErr: true,
@@ -312,7 +313,7 @@ func Test_repository_GetOrderDetail(t *testing.T) {
 			name: "success",
 			args: args{orderID: 1},
 			mock: func(args args) {
-				mock.ExpectPrepare(queryGetOrderDetail).ExpectQuery().WithArgs(args.orderID).
+				mock.ExpectPrepare(queryGetOrderDetail).ExpectQuery().WithArgs(args.userID, args.orderID).
 					WillReturnRows(sqlmock.NewRows([]string{"id", "order_id", "book_id", "quantity", "price"}).
 						AddRow(1, 1, 1, 1, 10000))
 			},
@@ -333,7 +334,7 @@ func Test_repository_GetOrderDetail(t *testing.T) {
 		for _, tt := range tests {
 			Convey(tt.name, func() {
 				tt.mock(tt.args)
-				got, err := repo.GetOrderDetail(context.Background(), tt.args.orderID)
+				got, err := repo.GetOrderDetail(context.Background(), tt.args.userID, tt.args.orderID)
 				if tt.wantErr {
 					So(err, ShouldNotBeNil)
 				}
